@@ -1,0 +1,32 @@
+version: '3'
+
+services:
+  mysql:
+    image: mysql:5.7
+    ports: 
+      - '3306:3306'
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: wp
+      MYSQL_USER: wp
+      MYSQL_PASSWORD: wp
+    volumes:
+      - db_data:/var/lib/mysql
+
+
+  wordpress:
+    image: wordpress
+    ports:
+      - '8080:80'
+    restart: always # no(default), on-failure: 오작동하면서 종료되었을 때에 다시시작
+    environment:
+      WORDPRESS_DB_HOST: mysql:3306
+      WORDPRESS_DB_USER: wp
+      WORDPRESS_DB_PASSWORD: wp
+      WORDPRESS_DB_NAME: wp
+    depends_on:
+      - mysql
+
+# 호스트가 볼륨을 관리하지 않고 도커에게 불륨을 관리하게 한다!
+volumes:
+  db_data: {}
